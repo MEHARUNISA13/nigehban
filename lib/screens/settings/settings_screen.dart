@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/data_seeding_service.dart';
 import '../../config/theme.dart';
 import '../../config/routes.dart';
+// import '../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -75,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return Column(
                 children: [
                   SwitchListTile(
-                    title: const Text('Notifications'),
+                    title: Text('Settings'),
                     subtitle: const Text('Receive safety alerts'),
                     value: settings.notificationsEnabled,
                     onChanged: (value) {
@@ -109,10 +111,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
 
           // Safety Section
-          _buildSectionHeader('Safety'),
+          _buildSectionHeader('Safety Status'),
           ListTile(
             leading: const Icon(Icons.contacts),
-            title: const Text('Emergency Contacts'),
+            title: Text('Emergency Contacts'),
             subtitle: const Text('Manage your emergency contacts'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -144,6 +146,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           const Divider(),
 
+          // Developer Section (for testing/demo)
+          _buildSectionHeader('Developer Options'),
+          ListTile(
+            leading: const Icon(Icons.data_usage, color: AppTheme.primaryColor),
+            title: const Text('Seed Sample Data'),
+            subtitle: const Text('Add demo incidents and safe zones'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              _showSeedDataDialog();
+            },
+          ),
+
+          const Divider(),
+
           // About Section
           _buildSectionHeader('About'),
           ListTile(
@@ -156,18 +172,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: const Icon(Icons.privacy_tip),
-            title: const Text('Privacy Policy'),
+            title: Text('Privacy Policy'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // Show privacy policy
+              Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             },
           ),
           ListTile(
             leading: const Icon(Icons.description),
-            title: const Text('Terms of Service'),
+            title: Text('Terms & Conditions'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // Show terms of service
+              Navigator.pushNamed(context, AppRoutes.termsConditions);
             },
           ),
 
@@ -176,9 +192,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Logout
           ListTile(
             leading: const Icon(Icons.logout, color: AppTheme.dangerColor),
-            title: const Text(
+            title: Text(
               'Logout',
-              style: TextStyle(color: AppTheme.dangerColor),
+              style: const TextStyle(color: AppTheme.dangerColor),
             ),
             onTap: () {
               _showLogoutDialog();
@@ -277,6 +293,74 @@ class _SettingsScreenState extends State<SettingsScreen> {
               backgroundColor: AppTheme.dangerColor,
             ),
             child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSeedDataDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Seed Sample Data'),
+        content: const Text(
+          'This will add sample incidents and safe zones for major cities (Islamabad, Karachi, Lahore) to Firebase.\n\n'
+          'This is useful for testing and demo purposes.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              
+              // Show loading
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+
+              try {
+                // Use seeding service
+                final seedingService = DataSeedingService();
+                final result = await seedingService.seedSampleData();
+
+                if (mounted) {
+                  Navigator.pop(context); // Close loading
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '✅ Seeded ${result['incidents']} incidents and ${result['safeZones']} safe zones',
+                      ),
+                      backgroundColor: AppTheme.successColor,
+                      duration: const Duration(seconds: 4),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  Navigator.pop(context); // Close loading
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error seeding data: $e'),
+                      backgroundColor: AppTheme.dangerColor,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryColor,
+            ),
+            child: const Text('Seed Data'),
           ),
         ],
       ),

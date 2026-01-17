@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         backgroundColor: AppTheme.dangerColor,
         icon: const Icon(Icons.warning_amber_rounded),
-        label: const Text('SOS'),
+        label: Text('SOS'),
       ),
     );
   }
@@ -187,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Safety Status',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
                             ),
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       backgroundColor: Colors.white,
                       foregroundColor: AppTheme.primaryColor,
                     ),
-                    child: const Text('Enable Location'),
+                    child: Text('Enable Location'),
                   ),
                 ],
               ],
@@ -281,9 +281,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                     Text(
                       'Emergency Contacts',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -292,15 +292,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         Navigator.pushNamed(context, AppRoutes.emergencyContacts);
                       },
-                      child: const Text('Manage'),
+                      child: Text('Manage'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 contacts.isEmpty
-                    ? const Text(
+                    ? Text(
                         'No emergency contacts added yet',
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       )
                     : Column(
                         children: contacts.take(3).map((contact) {
@@ -337,13 +337,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.lightbulb, color: AppTheme.warningColor),
-                SizedBox(width: 8),
+                const Icon(Icons.lightbulb, color: AppTheme.warningColor),
+                const SizedBox(width: 8),
                 Text(
                   'Safety Tips',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -352,8 +352,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 12),
             _buildTipItem('Always share your location with trusted contacts'),
-            _buildTipItem('Stay in well-lit areas when traveling at night'),
             _buildTipItem('Keep emergency contacts updated'),
+            _buildTipItem('Trust your instincts and stay alert'),
           ],
         ),
       ),

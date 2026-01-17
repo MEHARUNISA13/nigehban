@@ -1,9 +1,11 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// import 'l10n/app_localizations.dart';
 import 'config/theme.dart';
 import 'config/routes.dart';
 import 'services/auth_service.dart';
@@ -15,6 +17,7 @@ import 'providers/location_provider.dart';
 import 'providers/reports_provider.dart';
 import 'providers/emergency_provider.dart';
 import 'providers/settings_provider.dart';
+import 'providers/safety_map_provider.dart';
 
 import 'screens/auth/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
@@ -27,13 +30,15 @@ import 'screens/reports/reports_list_screen.dart';
 import 'screens/reports/create_report_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/settings/emergency_contacts_screen.dart';
+import 'screens/legal/privacy_policy_screen.dart';
+import 'screens/legal/terms_conditions_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Hive
   await Hive.initFlutter();
-  
+
   // Initialize Firebase
   try {
     await Firebase.initializeApp();
@@ -67,25 +72,27 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => FirestoreService()),
         ChangeNotifierProvider(create: (_) => LocationService()),
         Provider(create: (_) => NotificationService()),
-        
+
         // Providers
         ChangeNotifierProxyProvider<LocationService, LocationProvider>(
           create: (context) => LocationProvider(
             locationService: context.read<LocationService>(),
             notificationService: context.read<NotificationService>(),
           ),
-          update: (context, locationService, previous) => previous ?? LocationProvider(
-            locationService: locationService,
-            notificationService: context.read<NotificationService>(),
-          ),
+          update: (context, locationService, previous) =>
+              previous ??
+              LocationProvider(
+                locationService: locationService,
+                notificationService: context.read<NotificationService>(),
+              ),
         ),
-        
+
         ChangeNotifierProvider(
           create: (context) => ReportsProvider(
             firestoreService: context.read<FirestoreService>(),
           ),
         ),
-        
+
         ChangeNotifierProvider(
           create: (context) {
             final locationService = context.read<LocationService>();
@@ -100,7 +107,9 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
-        
+
+        ChangeNotifierProvider(create: (_) => SafetyMapProvider()),
+
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: Consumer<SettingsProvider>(
@@ -108,6 +117,16 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Nigehbaan',
             theme: AppTheme.lightTheme,
+            // localizationsDelegates: const [
+            //   AppLocalizations.delegate,
+            //   GlobalMaterialLocalizations.delegate,
+            //   GlobalWidgetsLocalizations.delegate,
+            //   GlobalCupertinoLocalizations.delegate,
+            // ],
+            // supportedLocales: const [
+            //   Locale('en'),
+            //   Locale('zh'),
+            // ],
             debugShowCheckedModeBanner: false,
             initialRoute: AppRoutes.splash,
             routes: {
@@ -121,7 +140,11 @@ class MyApp extends StatelessWidget {
               AppRoutes.reports: (context) => const ReportsListScreen(),
               AppRoutes.createReport: (context) => const CreateReportScreen(),
               AppRoutes.settings: (context) => const SettingsScreen(),
-              AppRoutes.emergencyContacts: (context) => const EmergencyContactsScreen(),
+              AppRoutes.emergencyContacts: (context) =>
+                  const EmergencyContactsScreen(),
+              AppRoutes.privacyPolicy: (context) => const PrivacyPolicyScreen(),
+              AppRoutes.termsConditions: (context) =>
+                  const TermsConditionsScreen(),
             },
           );
         },

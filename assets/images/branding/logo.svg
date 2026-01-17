@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shield Outline -->
+  <path d="M512 100 C512 100, 750 150, 800 200 C850 250, 850 400, 850 500 C850 650, 750 800, 512 920 C274 800, 174 650, 174 500 C174 400, 174 250, 224 200 C274 150, 512 100, 512 100 Z" 
+        stroke="url(#shieldGradient)" 
+        stroke-width="40" 
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+  
+  <!-- Inner Shield Lines -->
+  <path d="M280 280 L280 500 C280 620, 350 720, 512 820" 
+        stroke="url(#shieldGradient)" 
+        stroke-width="30" 
+        fill="none"
+        opacity="0.6"
+        stroke-linecap="round"/>
+  
+  <!-- Location Pin -->
+  <g transform="translate(512, 350)">
+    <!-- Pin Body -->
+    <ellipse cx="0" cy="-50" rx="80" ry="80" fill="url(#pinGradient)"/>
+    <circle cx="0" cy="-50" r="35" fill="white" opacity="0.3"/>
+    
+    <!-- Pin Point -->
+    <path d="M 0,-10 L -25,40 L 0,25 L 25,40 Z" fill="url(#pinGradient)"/>
+  </g>
+  
+  <!-- Text: نگہبان (Nigehban in Urdu) -->
+  <text x="512" y="680" 
+        font-family="Arial, sans-serif" 
+        font-size="120" 
+        font-weight="bold"
+        fill="white" 
+        text-anchor="middle"
+        letter-spacing="5">نگہبان</text>
+</svg>

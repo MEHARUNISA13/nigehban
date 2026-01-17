@@ -12,4 +12,6 @@ class AppRoutes {
   static const String createReport = '/create_report';
   static const String settings = '/settings';
   static const String emergencyContacts = '/emergency_contacts';
+  static const String privacyPolicy = '/privacy_policy';
+  static const String termsConditions = '/terms_conditions';
 }
